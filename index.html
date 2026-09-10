@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHO Global Dementia Observatory — Intelligence Dashboard</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-block">
+                <div class="who-logo">
+                    <span class="who-acronym">WHO</span>
+                    <span class="who-title">Dementia Observatory</span>
+                </div>
+                <div class="report-subtitle">GLOBAL STATUS REPORT</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">EXECUTIVE ANALYSIS</div>
+                <a href="#overview" class="nav-link active" data-section="overview">
+                    <i data-lucide="layout-dashboard"></i> Executive Overview
+                </a>
+                <a href="#epidemiology" class="nav-link" data-section="epidemiology">
+                    <i data-lucide="activity"></i> Epidemiology & Burden
+                </a>
+                <a href="#societal-costs" class="nav-link" data-section="societal-costs">
+                    <i data-lucide="dollar-sign"></i> Societal Costs
+                </a>
+
+                <div class="nav-section-title">HEALTH SYSTEMS & EQUITY</div>
+                <a href="#informal-care" class="nav-link" data-section="informal-care">
+                    <i data-lucide="users"></i> Informal Care & Gender
+                </a>
+                <a href="#health-equity" class="nav-link" data-section="health-equity">
+                    <i data-lucide="stethosocpe"></i> Diagnosis & Health Equity
+                </a>
+                <a href="#risk-reduction" class="nav-link" data-section="risk-reduction">
+                    <i data-lucide="shield-alert"></i> Risk Reduction
+                </a>
+
+                <div class="nav-section-title">COUNTRIES & SCIENCE</div>
+                <a href="#gdo-countries" class="nav-link" data-section="gdo-countries">
+                    <i data-lucide="globe"></i> GDO Countries
+                </a>
+                <a href="#national-responses" class="nav-link" data-section="national-responses">
+                    <i data-lucide="clipboard-list"></i> National Responses
+                </a>
+                <a href="#research-innovation" class="nav-link" data-section="research-innovation">
+                    <i data-lucide="flask-conical"></i> Research & Innovation
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>WHO Global Status Report (2021)<br><small>ISBN: 978-92-4-003324-5</small></p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTAINER -->
+        <div class="main-wrapper">
+            <!-- TOP HEADER -->
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1>GLOBAL DEMENTIA OBSERVATORY</h1>
+                    <p>Global Status Report Intelligence Dashboard</p>
+                </div>
+
+                <div class="header-pill">
+                    <i data-lucide="calendar"></i> Global Dementia Action Plan (2017–2025)
+                </div>
+
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="globalSearch" placeholder="Search section, indicator, country...">
+                        <div id="searchResults" class="search-results-dropdown hidden"></div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="window.print()" title="Print Dashboard">
+                        <i data-lucide="printer"></i> Print / PDF
+                    </button>
+                    <a href="https://www.who.int/publications/i/item/9789240033245" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                        <i data-lucide="external-link"></i> WHO Report
+                    </a>
+                </div>
+            </header>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="content-body">
+                
+                <!-- KPI RIBBON (ALWAYS VISIBLE OR OVERVIEW TOP) -->
+                <section class="kpi-ribbon">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">PEOPLE LIVING WITH DEMENTIA</span>
+                            <i data-lucide="users" class="kpi-icon icon-teal"></i>
+                        </div>
+                        <div class="kpi-value">55.2M</div>
+                        <div class="kpi-sub">2019 baseline estimate</div>
+                        <div class="kpi-footer">
+                            <span>2030: <strong>78M</strong></span>
+                            <span>2050: <strong>139M</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">GLOBAL SOCIETAL COST</span>
+                            <i data-lucide="trending-up" class="kpi-icon icon-blue"></i>
+                        </div>
+                        <div class="kpi-value">$1.3T</div>
+                        <div class="kpi-sub">2019 annual global cost</div>
+                        <div class="kpi-footer">
+                            <span>2030 (Base): <strong>$1.7T</strong></span>
+                            <span>2030 (Adj): <strong>$2.8T</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">GLOBAL CAUSE OF DEATH</span>
+                            <i data-lucide="alert-circle" class="kpi-icon icon-coral"></i>
+                        </div>
+                        <div class="kpi-value">7th</div>
+                        <div class="kpi-sub">2019 mortality ranking</div>
+                        <div class="kpi-footer text-coral font-medium">
+                            Leading cause of death & disability
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">PREVALENCE ≥65 YRS</span>
+                            <i data-lucide="bar-chart-2" class="kpi-icon icon-amber"></i>
+                        </div>
+                        <div class="kpi-value-group">
+                            <div><span class="kpi-val-sub">8.1%</span> <small>Women</small></div>
+                            <div><span class="kpi-val-sub">5.4%</span> <small>Men</small></div>
+                        </div>
+                        <div class="kpi-sub">Age-standardized prevalence ≥65</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">GDO REPORTING COUNTRIES</span>
+                            <i data-lucide="globe" class="kpi-icon icon-teal"></i>
+                        </div>
+                        <div class="kpi-value">62</div>
+                        <div class="kpi-sub">WHO Member States in GDO</div>
+                        <div class="kpi-footer">
+                            <span>Covering <strong>65.5%</strong> global pop</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">CARE PROVIDED BY WOMEN</span>
+                            <i data-lucide="heart" class="kpi-icon icon-coral"></i>
+                        </div>
+                        <div class="kpi-value">70%</div>
+                        <div class="kpi-sub">Informal caregiving hours</div>
+                        <div class="kpi-footer">
+                            <span>Avg <strong>5 hrs/day</strong> informal support</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 1: EXECUTIVE OVERVIEW -->
+                <section id="overview" class="dashboard-section active">
+                    <div class="section-header">
+                        <h2>Executive Overview</h2>
+                        <p class="section-subtitle">A data-led view of the global dementia burden, economic cost, caregiving, health-system response, and research.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Global Dementia Prevalence Trajectory (2019–2050)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartOverviewPrevalence"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    <strong>Note:</strong> Projection assumes age-specific prevalence remains unchanged and applies projected population ageing. It is an analytical baseline scenario, not a certainty forecast.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>2019 Dementia Population by WHO Region (Millions)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartOverviewRegional"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    <strong>Source:</strong> WHO Global status report estimates (2019 baseline data).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card margin-top">
+                        <div class="card-header">
+                            <h3>Key Report Core Findings</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="facts-grid">
+                                <div class="fact-item">
+                                    <div class="fact-num text-teal">55.2M</div>
+                                    <div class="fact-label">People living with dementia worldwide in 2019</div>
+                                </div>
+                                <div class="fact-item">
+                                    <div class="fact-num text-blue">78M</div>
+                                    <div class="fact-label">Projected global prevalence by 2030</div>
+                                </div>
+                                <div class="fact-item">
+                                    <div class="fact-num text-amber">139M</div>
+                                    <div class="fact-label">Projected global prevalence by 2050</div>
+                                </div>
+                                <div class="fact-item">
+                                    <div class="fact-num text-coral">7th</div>
+                                    <div class="fact-label">Leading cause of death among all diseases globally</div>
+                                </div>
+                                <div class="fact-item">
+                                    <div class="fact-num text-teal">62</div>
+                                    <div class="fact-label">Member states actively contributing GDO data</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 2: EPIDEMIOLOGY & BURDEN -->
+                <section id="epidemiology" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Global Burden & Demographic Inequality</h2>
+                        <p class="section-subtitle">Analytical breakdown of prevalence trajectories, gender disparities, and regional variations.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Prevalence Growth Projections</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartEpiProjection"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Gender Comparison (Age ≥65 Prevalence)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartEpiGender"></canvas>
+                                </div>
+                                <div class="callout callout-info margin-top-sm">
+                                    <p><strong>Gender Disparity Note:</strong> Women experience higher dementia prevalence than men in every WHO region, driven both by longer life expectancy and potential gender-specific biological/social risk factors.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card margin-top">
+                        <div class="card-header">
+                            <h3>Methodology & Data Classification Framework</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="methodology-grid">
+                                <div class="method-card">
+                                    <span class="badge badge-teal">Observed / Estimated Values</span>
+                                    <p>Baseline estimates for 2019 (e.g. 55.2M cases, $1.3T global cost) derived from WHO epidemiological and economic modeling.</p>
+                                </div>
+                                <div class="method-card">
+                                    <span class="badge badge-blue">WHO Projections</span>
+                                    <p>2030 and 2050 epidemiological numbers based on static age-specific prevalence combined with UN UNWPP population projections.</p>
+                                </div>
+                                <div class="method-card">
+                                    <span class="badge badge-amber">Calculated / Adjusted Values</span>
+                                    <p>Cost figures adjusted for projected real growth in long-term care wage and support costs (e.g. $2.8T scenario for 2030).</p>
+                                </div>
+                                <div class="method-card">
+                                    <span class="badge badge-coral">Illustrative Scenarios</span>
+                                    <p>Interactive simulations (e.g. risk reduction delayed onset) designed to demonstrate analytical impact, not formal WHO forecasts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 3: SOCIETAL COSTS -->
+                <section id="societal-costs" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Societal & Economic Cost</h2>
+                        <p class="section-subtitle">Economic impact, cost projections, distribution of cost components, and income-group reliance on informal care.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Global Direct & Indirect Cost Trajectory (USD)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartCostTrajectory"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    The <strong>$2.8T</strong> figure reflects adjustments for increasing wage and care costs relative to standard economic inflation.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Global Cost Composition (WHO Report Data)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartCostComposition"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    Informal care accounts for roughly ~50% of the $1.3 Trillion global cost burden.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card margin-top">
+                        <div class="card-header">
+                            <h3>Cost Distribution by World Bank Income Group</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 260px;">
+                                <canvas id="chartIncomeCostDistribution"></canvas>
+                            </div>
+                            <div class="callout callout-warning margin-top-sm">
+                                <p><strong>Economic Inequality:</strong> In Low- and Middle-Income Countries (LMICs), up to <strong>65%</strong> of total dementia costs are borne through unpaid informal caregiving. In High-Income Countries (HICs), formal social care and direct medical costs make up a significantly higher proportion.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 4: INFORMAL CARE & GENDER -->
+                <section id="informal-care" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Informal Care & Gender</h2>
+                        <p class="section-subtitle">Analytical insight into unpaid caregiving burden, gender distribution, and daily care time requirements.</p>
+                    </div>
+
+                    <div class="grid-3col">
+                        <div class="stat-card border-coral">
+                            <div class="stat-num text-coral">5 Hours</div>
+                            <div class="stat-title">Average Daily Informal Care</div>
+                            <div class="stat-desc">Provided per day per person living with dementia for activities of daily living (ADLs).</div>
+                        </div>
+                        <div class="stat-card border-teal">
+                            <div class="stat-num text-teal">70%</div>
+                            <div class="stat-title">Care Hours by Women</div>
+                            <div class="stat-desc">Globally, approximately 70% of all informal care hours are provided by female family members.</div>
+                        </div>
+                        <div class="stat-card border-amber">
+                            <div class="stat-num text-amber">75%</div>
+                            <div class="stat-title">Carer Support Availability</div>
+                            <div class="stat-desc">Of GDO countries report offering some carer support, but availability is heavily skewed to HICs.</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2col margin-top">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Caregiving Hours Distribution by Gender</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartCareGender"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Support Programs for Informal Carers by Income Group</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartCarerSupport"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 5: DIAGNOSIS & HEALTH EQUITY -->
+                <section id="health-equity" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Diagnosis, Treatment & Health-System Equity</h2>
+                        <p class="section-subtitle">Disparities in diagnostic rates, health system guidelines, reimbursement, and geographic accessibility.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Diagnostic Rate in Reporting Countries (%)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartDiagnosticRates"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    <strong>Source:</strong> WHO Global status report (2021). Median diagnostic coverage among 29 GDO countries reporting this metric.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Clinical Practice Guidelines & Protocol Access</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartProtocolsAccess"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    Only 1 in 3 LMICs has established clinical guidelines for dementia care vs. 4 in 5 HICs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card margin-top">
+                        <div class="card-header">
+                            <h3>Health System Accessibility & Equity Matrix</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Health System Indicator</th>
+                                            <th>High-Income Countries (HICs)</th>
+                                            <th>Low/Middle-Income Countries (LMICs)</th>
+                                            <th>WHO Target / Benchmark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Diagnostic Access outside Capital Cities</strong></td>
+                                            <td><span class="status-pill status-green">66% (2 in 3)</span></td>
+                                            <td><span class="status-pill status-red">25% (1 in 4)</span></td>
+                                            <td>Equitable geographic access</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Community-Based Care Services</strong></td>
+                                            <td><span class="status-pill status-green">High (>85%)</span></td>
+                                            <td><span class="status-pill status-amber">Limited / Variable</span></td>
+                                            <td>Universal access in primary care</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Reimbursement for Dementia Medications</strong></td>
+                                            <td><span class="status-pill status-green">Full or Partial</span></td>
+                                            <td><span class="status-pill status-red">Out-of-pocket / None</span></td>
+                                            <td>Financial protection & inclusion</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Assistive Technologies Provision</strong></td>
+                                            <td><span class="status-pill status-green">Widely Available</span></td>
+                                            <td><span class="status-pill status-red">Severely Restricted</span></td>
+                                            <td>Integrated assistive tech</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 6: RISK REDUCTION -->
+                <section id="risk-reduction" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Risk Reduction</h2>
+                        <p class="section-subtitle">Modifiable risk factors for cognitive decline and an interactive analytical scenario simulator.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Key Modifiable Risk Factors (WHO Guidelines)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="risk-factors-list">
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Physical Inactivity</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Smoking / Tobacco Use</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Unhealthy Alcohol Use</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Hypertension in Midlife</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Diabetes Mellitus</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Midlife Obesity</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Hearing Impairment</div>
+                                    <div class="risk-item"><i data-lucide="check-circle-2" class="text-teal"></i> Depression & Social Isolation</div>
+                                </div>
+                                <div class="callout callout-info margin-top-sm">
+                                    <p><strong>Note on 40% Risk Factor Evidence:</strong> Academic research (e.g. Lancet Commission 2020/2024) suggests up to 40-45% of dementias could theoretically be prevented or delayed by eliminating key risk factors across the life course. The WHO report emphasizes risk reduction policies in primary healthcare.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Interactive Delay Onset Scenario Simulator</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="simulator-box">
+                                    <label for="riskSlider" class="slider-label">
+                                        Simulated Delay in Disease Onset: <span id="sliderValue" class="font-bold text-teal">2 Years</span>
+                                    </label>
+                                    <input type="range" id="riskSlider" min="1" max="5" value="2" step="1" class="slider">
+                                    <div class="slider-ticks">
+                                        <span>1 yr</span>
+                                        <span>2 yrs</span>
+                                        <span>3 yrs</span>
+                                        <span>4 yrs</span>
+                                        <span>5 yrs</span>
+                                    </div>
+
+                                    <div class="sim-result-box margin-top">
+                                        <div class="sim-title">Estimated Reduction in Projected 2050 Cases</div>
+                                        <div class="sim-number text-teal" id="simResultValue">-18.5%</div>
+                                        <div class="sim-sub" id="simResultSub">Approx. 25.7 Million fewer cases in 2050</div>
+                                    </div>
+                                </div>
+                                <p class="chart-note margin-top-sm">
+                                    <strong>Label:</strong> <em>Illustrative scenario — not an official WHO projection.</em> Calculated based on standard epidemiological exponential delay models.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 7: GLOBAL DEMENTIA OBSERVATORY -->
+                <section id="gdo-countries" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Global Dementia Observatory — Country View</h2>
+                        <p class="section-subtitle">Data from the 62 WHO Member States submitting baseline intelligence to the GDO.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header search-filter-header">
+                            <div class="filter-group">
+                                <div class="filter-item">
+                                    <label>WHO Region:</label>
+                                    <select id="filterRegion">
+                                        <option value="ALL">All Regions</option>
+                                        <option value="AMRO">Americas (AMRO)</option>
+                                        <option value="EURO">Europe (EURO)</option>
+                                        <option value="SEARO">South-East Asia (SEARO)</option>
+                                        <option value="WPRO">Western Pacific (WPRO)</option>
+                                        <option value="EMRO">Eastern Mediterranean (EMRO)</option>
+                                        <option value="AFRO">Africa (AFRO)</option>
+                                    </select>
+                                </div>
+                                <div class="filter-item">
+                                    <label>Income Group:</label>
+                                    <select id="filterIncome">
+                                        <option value="ALL">All Income Groups</option>
+                                        <option value="HIC">High Income (HIC)</option>
+                                        <option value="UMIC">Upper Middle Income (UMIC)</option>
+                                        <option value="LMIC">Lower Middle Income (LMIC)</option>
+                                        <option value="LIC">Low Income (LIC)</option>
+                                    </select>
+                                </div>
+                                <div class="filter-item">
+                                    <label>Country Search:</label>
+                                    <input type="text" id="filterCountryText" placeholder="Search country name...">
+                                </div>
+                            </div>
+                            <div class="filter-actions-btns">
+                                <button class="btn btn-secondary" id="btnClearFilters">Clear Filters</button>
+                                <button class="btn btn-teal" id="btnExportCSV"><i data-lucide="download"></i> Export CSV</button>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="gdoTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>WHO Region</th>
+                                            <th>World Bank Income Group</th>
+                                            <th>GDO Data Status</th>
+                                            <th>National Policy / Plan Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gdoTableBody">
+                                        <!-- Rendered via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 8: NATIONAL RESPONSES -->
+                <section id="national-responses" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>National Policy Responses (7 Action Areas)</h2>
+                        <p class="section-subtitle">Progress tracking against the Global Action Plan on Dementia (2017–2025).</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Implementation Status across Global Dementia Action Plan Target Areas</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="action-areas-grid">
+                                <div class="action-card">
+                                    <div class="action-num">Area 1</div>
+                                    <h4>Dementia as a Priority</h4>
+                                    <p>Only <strong>25%</strong> of Member States have a standalone or integrated National Dementia Plan.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-teal" style="width: 25%;"></div></div>
+                                </div>
+
+                                <div class="action-card">
+                                    <div class="action-num">Area 2</div>
+                                    <h4>Awareness & Friendliness</h4>
+                                    <p><strong>38%</strong> of reporting countries have public awareness campaigns or dementia-friendly initiatives.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-blue" style="width: 38%;"></div></div>
+                                </div>
+
+                                <div class="action-card">
+                                    <div class="action-num">Area 3</div>
+                                    <h4>Risk Reduction</h4>
+                                    <p><strong>19%</strong> of reporting countries have explicit risk reduction guidelines targeting dementia.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-amber" style="width: 19%;"></div></div>
+                                </div>
+
+                                <div class="action-card">
+                                    <div class="action-num">Area 4</div>
+                                    <h4>Diagnosis & Support</h4>
+                                    <p>Global median diagnostic coverage is <strong>48%</strong> among GDO countries reporting data.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-teal" style="width: 48%;"></div></div>
+                                </div>
+
+                                <div class="action-card">
+                                    <div class="action-num">Area 5</div>
+                                    <h4>Information Systems</h4>
+                                    <p><strong>62 Countries</strong> submit routine surveillance data through the GDO portal.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-blue" style="width: 32%;"></div></div>
+                                </div>
+
+                                <div class="action-card">
+                                    <div class="action-num">Area 6</div>
+                                    <h4>Carer Support</h4>
+                                    <p><strong>75%</strong> of GDO countries offer training or respite, heavily concentrated in HICs.</p>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill bg-coral" style="width: 75%;"></div></div>
+                                </div>
+
+                                <div class="action-card full-width-card">
+                                    <div class="action-num">Area 7</div>
+                                    <h4>Research & Innovation</h4>
+                                    <p>Research output is heavily concentrated in HICs; LMIC funding data: <span class="badge badge-grey">Data Not Reported</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+                <!-- SECTION 9: RESEARCH & INNOVATION -->
+                <section id="research-innovation" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Research & Innovation</h2>
+                        <p class="section-subtitle">Global research funding disparities, LMIC participation, and clinical research engagement.</p>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Global Dementia Research Output & Funding Disparity</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartResearchFunding"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    Over <strong>90%</strong> of published dementia research and funded clinical trials originate in High-Income Countries.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Involvement of People with Dementia & Carers in Research</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="chartInvolvementResearch"></canvas>
+                                </div>
+                                <p class="chart-note">
+                                    Participatory research strategies are expanding in HICs but remain largely unmeasured in LMICs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-source-footer">
+                        Source: World Health Organization. Global status report on the public health response to dementia. 2021. ISBN 978-92-4-003324-5.
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
