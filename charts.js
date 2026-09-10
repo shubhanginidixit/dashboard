@@ -76,15 +76,13 @@ function initCharts() {
     });
 
     createChart('chartIndiaProfile', {
-        type: 'bar',
+        type: 'pie',
         data: {
-            labels: ['India estimate'],
-            datasets: [{ label: 'People with dementia (millions)', data: [8.8], backgroundColor: colors.coral, borderRadius: 6, barThickness: 34 }]
+            labels: ['India estimate', 'Rest of world estimate'],
+            datasets: [{ data: [8.8, 46.4], backgroundColor: [colors.coral, '#d9eee8'], borderColor: '#ffffff', borderWidth: 3 }]
         },
         options: {
-            indexAxis: 'y',
-            plugins: { legend: { display: false } },
-            scales: { x: { beginAtZero: true, max: 10, title: { display: true, text: 'Millions' } }, y: { grid: { display: false } } }
+            plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 12, padding: 14 } } }
         }
     });
 
