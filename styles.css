@@ -902,6 +902,14 @@ body {
 .chart-container { height: 290px; }
 .stat-card { border-radius: 12px; box-shadow: var(--shadow-subtle); }
 .fact-item { background: rgba(255,255,255,.65); border-color: #d9e9e4; }
+.india-profile { display: grid; grid-template-columns: minmax(260px, .9fr) 1.4fr; gap: 24px; align-items: center; padding: 4px 0 2px; }
+.india-profile-copy h3 { font-family: var(--display-font); font-size: 1.25rem; margin-top: 4px; }
+.india-profile-copy p { color: var(--muted-text); font-size: .82rem; margin-top: 5px; }
+.india-profile-kicker { color: var(--primary-teal); font-size: .62rem; font-weight: 700; letter-spacing: .14em; }
+.india-profile-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; color: var(--muted-text); font-size: .72rem; }
+.india-profile-meta strong { color: var(--dark-text); }
+.india-profile-chart { height: 145px; }
+.india-profile-divider { border-top: 1px solid #e6efec; margin: 18px 0; }
 
 .brand-block::after {
     content: 'GLOBAL STATUS REPORT · 2021';
@@ -935,6 +943,8 @@ body {
     .impact-brief { display: block; padding: 20px; }
     .impact-signal { min-width: 0; margin-top: 18px; padding: 13px 0 0; border-left: 0; border-top: 1px solid rgba(141,226,201,.35); }
     .impact-signal small { max-width: none; }
+    .india-profile { grid-template-columns: 1fr; gap: 10px; }
+    .india-profile-chart { height: 150px; }
     .header-pill { order: 3; width: 100%; justify-content: center; }
     .header-actions { width: 100%; margin-left: 0; }
     .search-box, .search-box input { width: 100%; }
