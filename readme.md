@@ -5,7 +5,7 @@ This is an analytical, data-visualization dashboard based on the official World 
 * **ISBN:** 978-92-4-003324-5
 * **Publisher:** World Health Organization
 
-[Open the dashboard](index.html)
+[Open the live dashboard](https://shubhanginidixit.github.io/dashboard/)
 
 ## Purpose
 This dashboard provides research-grade, academic, and policy intelligence on:
