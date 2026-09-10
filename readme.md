@@ -5,6 +5,8 @@ This is an analytical, data-visualization dashboard based on the official World 
 * **ISBN:** 978-92-4-003324-5
 * **Publisher:** World Health Organization
 
+[Open the dashboard](index.html)
+
 ## Purpose
 This dashboard provides research-grade, academic, and policy intelligence on:
 1. Global dementia epidemiology and future projections.
