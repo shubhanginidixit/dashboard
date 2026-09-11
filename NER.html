@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NER Dementia Care | SIH Dashboard</title>
+    <style>
+        :root {
+            --bg: #0B132B;
+            --card: #1C2541;
+            --card-light: #243055;
+            --teal: #00F5D4;
+            --purple: #7B2CBF;
+            --magenta: #FF007F;
+            --text: #F7FAFF;
+            --muted: #AAB6D3;
+            --line: rgba(170, 182, 211, 0.18);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; min-height: 100vh; background: radial-gradient(circle at 8% 0%, rgba(123, 44, 191, 0.2), transparent 30%), var(--bg);
+            color: var(--text); font-family: "Trebuchet MS", "Segoe UI", sans-serif; padding: 32px clamp(18px, 4vw, 64px) 48px;
+        }
+        button, select, input { font: inherit; }
+        .app-shell { max-width: 1440px; margin: 0 auto; }
+        .site-header { text-align: center; padding: 8px 0 24px; }
+        .eyebrow, .section-kicker { color: var(--teal); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+        h1 { margin: 10px 0 8px; font-size: clamp(1.8rem, 4vw, 3.25rem); line-height: 1.05; letter-spacing: -0.04em; }
+        .subtitle { max-width: 760px; margin: 0 auto; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+        .tabs { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 22px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: rgba(28, 37, 65, 0.75); }
+        .tab { border: 1px solid transparent; border-radius: 7px; padding: 9px 16px; color: var(--muted); background: transparent; cursor: pointer; transition: 0.2s ease; }
+        .tab:hover, .tab:focus-visible, .tab.active { color: var(--bg); background: var(--teal); box-shadow: 0 0 20px rgba(0, 245, 212, 0.25); }
+        .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.86fr) minmax(300px, 1fr); gap: 18px; align-items: start; }
+        .column { display: flex; flex-direction: column; gap: 18px; }
+        .panel { background: linear-gradient(145deg, rgba(36, 48, 85, 0.98), rgba(28, 37, 65, 0.98)); border: 1px solid var(--line); border-radius: 14px; padding: clamp(18px, 2.4vw, 28px); box-shadow: var(--shadow); }
+        .panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+        .panel h2 { margin: 5px 0 0; font-size: 1.15rem; line-height: 1.25; }
+        .panel-copy { color: var(--muted); font-size: 0.82rem; line-height: 1.45; margin: 7px 0 0; }
+        .state-control { min-width: 165px; }
+        .state-control label { display: block; color: var(--muted); font-size: 0.7rem; margin-bottom: 6px; }
+        select { width: 100%; border: 1px solid rgba(0, 245, 212, 0.4); border-radius: 7px; padding: 9px 10px; color: var(--text); background: var(--bg); cursor: pointer; }
+        select:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .kpi-card { min-height: 126px; padding: 15px; border: 1px solid var(--line); border-radius: 10px; background: rgba(11, 19, 43, 0.46); transition: opacity 0.2s; }
+        .kpi-label { color: var(--muted); font-size: 0.68rem; line-height: 1.35; text-transform: uppercase; letter-spacing: 0.06em; }
+        .kpi-value { display: block; margin: 12px 0 5px; color: var(--teal); font-size: 1.65rem; font-weight: 700; }
+        .kpi-note { color: var(--muted); font-size: 0.72rem; line-height: 1.35; }
+        .simulator { border-left: 3px solid var(--teal); padding-left: 16px; }
+        .simulator-top { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+        .simulator-label { color: var(--muted); font-size: 0.83rem; }
+        .scenario { color: var(--teal); font-size: 0.9rem; font-weight: 700; text-align: right; }
+        input[type="range"] { width: 100%; margin: 17px 0 7px; accent-color: var(--teal); cursor: pointer; }
+        .range-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.7rem; }
+        .response { margin-top: 16px; padding: 13px 15px; border-radius: 8px; background: rgba(11, 19, 43, 0.72); color: var(--muted); font-size: 0.83rem; line-height: 1.5; }
+        .response strong { color: var(--text); }
+        .visual-grid { display: grid; grid-template-columns: minmax(170px, 0.8fr) minmax(260px, 1.2fr); gap: 24px; align-items: center; }
+        .gauge-wrap { position: relative; width: min(190px, 100%); margin: auto; aspect-ratio: 1; }
+        .gauge-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .gauge-track, .gauge-value { fill: none; stroke-width: 13; }
+        .gauge-track { stroke: rgba(170, 182, 211, 0.16); }
+        .gauge-value { stroke: var(--magenta); stroke-linecap: round; stroke-dasharray: 471; stroke-dashoffset: 37.7; filter: drop-shadow(0 0 7px rgba(255, 0, 127, 0.6)); transition: stroke-dashoffset 0.5s ease; }
+        .gauge-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+        .gauge-number { color: var(--magenta); font-size: 2.2rem; font-weight: 700; }
+        .gauge-caption { color: var(--muted); font-size: 0.7rem; }
+        .chart-title { margin-bottom: 14px; font-size: 0.9rem; font-weight: 700; }
+        .chart-note { color: var(--muted); font-size: 0.72rem; margin-top: 12px; }
+        .bar-row { margin: 16px 0; }
+        .bar-meta { display: flex; justify-content: space-between; gap: 10px; font-size: 0.78rem; }
+        .bar-meta strong { color: var(--teal); }
+        .bar-track { height: 12px; margin-top: 7px; border-radius: 99px; background: rgba(11, 19, 43, 0.8); overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: inherit; transition: width 0.45s ease; }
+        .bar-fill.ner { width: 38%; background: var(--teal); box-shadow: 0 0 10px rgba(0, 245, 212, 0.4); }
+        .bar-fill.national { width: 20%; background: var(--purple); box-shadow: 0 0 10px rgba(123, 44, 191, 0.5); }
+        .asset-list { display: grid; gap: 9px; }
+        .asset-card { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px; border: 1px solid var(--line); border-radius: 9px; color: var(--text); text-align: left; background: rgba(11, 19, 43, 0.46); cursor: pointer; transition: 0.2s ease; }
+        .asset-card:hover, .asset-card.active { border-color: var(--teal); background: rgba(0, 245, 212, 0.08); transform: translateX(3px); }
+        .asset-name { font-size: 0.84rem; line-height: 1.35; }
+        .asset-type { flex: 0 0 auto; padding: 5px 8px; border-radius: 5px; color: var(--teal); background: rgba(0, 245, 212, 0.12); font-size: 0.68rem; }
+        .tip { min-height: 65px; margin-top: 13px; padding: 12px; border-radius: 8px; border: 1px solid rgba(123, 44, 191, 0.5); background: rgba(123, 44, 191, 0.12); color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+        .tip strong { color: var(--text); }
+        .language-list { display: grid; gap: 8px; }
+        .language-item { display: flex; justify-content: space-between; gap: 12px; padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--text); font-size: 0.82rem; }
+        .phase { color: var(--muted); font-size: 0.7rem; white-space: nowrap; }
+        .live-pill { border: 1px solid rgba(0, 245, 212, 0.3); border-radius: 99px; padding: 6px 9px; color: var(--teal); font-size: 0.68rem; white-space: nowrap; }
+        @media (max-width: 980px) { .dashboard-grid { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 620px) {
+            body { padding: 22px 14px 34px; }
+            .panel-header, .simulator-top { flex-direction: column; align-items: stretch; }
+            .state-control { min-width: 0; }
+            .scenario { text-align: left; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .visual-grid { grid-template-columns: 1fr; }
+            .gauge-wrap { width: 165px; }
+            .tabs { width: 100%; }
+            .tab { flex: 1 1 30%; padding-inline: 8px; }
+        }
+    </style>
+</head>
+<body>
+<main class="app-shell">
+    <header class="site-header">
+        <div class="eyebrow">Smart India Hackathon 2026 · SIH Prototype</div>
+        <h1>AI Memory &amp; Cognitive Gaming App</h1>
+        <p class="subtitle">An offline-first care companion designed for people living with dementia across North East India.</p>
+        <nav class="tabs" aria-label="Dashboard sections">
+            <button class="tab active" type="button" data-mode="overview" aria-pressed="true">Overview</button>
+            <button class="tab" type="button" data-mode="technology" aria-pressed="false">Technology</button>
+            <button class="tab" type="button" data-mode="experience" aria-pressed="false">Experience</button>
+        </nav>
+    </header>
+    <div class="dashboard-grid">
+        <div class="column">
+            <section class="panel" aria-labelledby="signals-title">
+                <div class="panel-header"><div><div class="section-kicker">01 · Live regional view</div><h2 id="signals-title">Impact signals</h2><p class="panel-copy">Select a state to tailor the planning snapshot for your presentation.</p></div><div class="state-control"><label for="state-filter">Focus state</label><select id="state-filter"><option value="all">North East · All states</option><option value="assam">Assam</option><option value="mizoram">Mizoram</option><option value="nagaland">Nagaland</option><option value="arunachal">Arunachal Pradesh</option><option value="manipur">Manipur</option></select></div></div>
+                <div class="kpi-grid">
+                    <article class="kpi-card" data-category="experience"><span class="kpi-label">Undiagnosed gap</span><strong class="kpi-value" id="kpi-gap">92%</strong><span class="kpi-note" id="kpi-gap-note">Rural NER estimate</span></article>
+                    <article class="kpi-card" data-category="technology"><span class="kpi-label">Offline coverage need</span><strong class="kpi-value" id="kpi-offline">38%</strong><span class="kpi-note">Communities needing offline mode</span></article>
+                    <article class="kpi-card" data-category="experience"><span class="kpi-label">Elderly illiteracy</span><strong class="kpi-value" id="kpi-literacy">55%</strong><span class="kpi-note">Voice and icon-first UX</span></article>
+                    <article class="kpi-card" data-category="technology"><span class="kpi-label">App size target</span><strong class="kpi-value">&lt; 25 MB</strong><span class="kpi-note">For low-RAM Android devices</span></article>
+                </div>
+            </section>
+            <section class="panel" aria-labelledby="simulator-title">
+                <div class="panel-header"><div><div class="section-kicker">02 · Product decision engine</div><h2 id="simulator-title">Connectivity simulator</h2><p class="panel-copy">Show judges how the same product adapts to different field conditions.</p></div><span class="live-pill">● Live model</span></div>
+                <div class="simulator"><div class="simulator-top"><span class="simulator-label">Target deployment focus</span><strong class="scenario" id="scenario-label">Semi-urban + deep rural</strong></div><input type="range" id="connectivity-slider" min="1" max="3" value="2" aria-label="Connectivity deployment focus"><div class="range-labels"><span>Urban hubs</span><span>Balanced</span><span>Deep off-grid</span></div><div class="response" id="strategy-response"><strong>System response:</strong> 100% offline gameplay core, regional language options, and lightweight visual navigation.</div></div>
+            </section>
+            <section class="panel" aria-labelledby="evidence-title">
+                <div class="panel-header"><div><div class="section-kicker">03 · Evidence snapshot</div><h2 id="evidence-title">The care gap in context</h2></div></div>
+                <div class="visual-grid"><div class="gauge-wrap" aria-label="92 percent undiagnosed gap"><svg viewBox="0 0 180 180" role="img"><circle class="gauge-track" cx="90" cy="90" r="75"></circle><circle class="gauge-value" cx="90" cy="90" r="75"></circle></svg><div class="gauge-center"><span class="gauge-number">92%</span><span class="gauge-caption">undiagnosed gap</span></div></div><div><div class="chart-title">Vascular dementia prevalence</div><div class="bar-row"><div class="bar-meta"><span>NER estimate</span><strong>38%</strong></div><div class="bar-track"><div class="bar-fill ner"></div></div></div><div class="bar-row"><div class="bar-meta"><span>National estimate</span><strong>20%</strong></div><div class="bar-track"><div class="bar-fill national"></div></div></div><p class="chart-note">Stroke-driven risk makes locally relevant cognitive games and caregiver education especially important.</p></div></div>
+            </section>
+        </div>
+        <aside class="column">
+            <section class="panel" aria-labelledby="assets-title"><div class="panel-header"><div><div class="section-kicker">04 · Cultural design kit</div><h2 id="assets-title">Game assets checklist</h2><p class="panel-copy">Tap an asset to reveal how it enters gameplay.</p></div></div><div class="asset-list"><button class="asset-card active" type="button" data-tip="Spatial recall: ask players to place floating huts back on the Loktak Lake scene."><span class="asset-name">Loktak Lake &amp; floating huts</span><span class="asset-type">Visuospatial</span></button><button class="asset-card" type="button" data-tip="Pattern match: use textile colours and motifs as familiar, low-literacy visual prompts."><span class="asset-name">Gamosa &amp; Puan textiles</span><span class="asset-type">Pattern match</span></button><button class="asset-card" type="button" data-tip="Category naming: identify local fruits to exercise language recall with culturally familiar objects."><span class="asset-name">Kazi Nemu &amp; local fruits</span><span class="asset-type">Naming</span></button><button class="asset-card" type="button" data-tip="Auditory cue: pair folk audio with memory cards and caregiver-led recognition rounds."><span class="asset-name">Bihu &amp; Hornbill folk audio</span><span class="asset-type">Auditory</span></button></div><div class="tip" id="asset-tip"><strong>Integration tip:</strong> Spatial recall: ask players to place floating huts back on the Loktak Lake scene.</div></section>
+            <section class="panel" aria-labelledby="languages-title"><div class="panel-header"><div><div class="section-kicker">05 · Inclusion roadmap</div><h2 id="languages-title">Regional language targets</h2></div></div><div class="language-list"><div class="language-item"><span>Assamese &amp; Bengali</span><span class="phase">Phase 1</span></div><div class="language-item"><span>Manipuri (Meitei) &amp; Khasi</span><span class="phase">Phase 1</span></div><div class="language-item"><span>Mizo &amp; Nagamese</span><span class="phase">Phase 2</span></div><div class="language-item"><span>Garo &amp; Arunachali languages</span><span class="phase">Roadmap</span></div></div></section>
+        </aside>
+    </div>
+</main>
+<script>
+    const stateData = { all: { gap: '92%', gapNote: 'Rural NER estimate', offline: '38%', literacy: '55%' }, assam: { gap: '89%', gapNote: 'Assam rural estimate', offline: '31%', literacy: '48%' }, mizoram: { gap: '94%', gapNote: 'Mizoram rural estimate', offline: '46%', literacy: '61%' }, nagaland: { gap: '95%', gapNote: 'Nagaland rural estimate', offline: '52%', literacy: '64%' }, arunachal: { gap: '96%', gapNote: 'Arunachal rural estimate', offline: '58%', literacy: '67%' }, manipur: { gap: '91%', gapNote: 'Manipur rural estimate', offline: '35%', literacy: '52%' } };
+    const stateFilter = document.getElementById('state-filter');
+    const updateState = () => { const data = stateData[stateFilter.value]; document.getElementById('kpi-gap').textContent = data.gap; document.getElementById('kpi-gap-note').textContent = data.gapNote; document.getElementById('kpi-offline').textContent = data.offline; document.getElementById('kpi-literacy').textContent = data.literacy; };
+    stateFilter.addEventListener('change', updateState);
+    const slider = document.getElementById('connectivity-slider');
+    const scenarios = { 1: { label: 'Urban hubs · Guwahati / Imphal', color: 'var(--teal)', text: '<strong>System response:</strong> Cloud-connected analytics, standard audio UI, and background sync can be enabled.' }, 2: { label: 'Semi-urban + deep rural', color: 'var(--teal)', text: '<strong>System response:</strong> 100% offline gameplay core, regional language options, and lightweight visual navigation.' }, 3: { label: 'Deep off-grid · high altitude', color: 'var(--magenta)', text: '<strong>System response:</strong> Zero-cloud reliance, compressed local voice prompts, and caregiver Bluetooth transfer mode.' } };
+    slider.addEventListener('input', () => { const scenario = scenarios[slider.value]; const label = document.getElementById('scenario-label'); label.textContent = scenario.label; label.style.color = scenario.color; document.getElementById('strategy-response').innerHTML = scenario.text; });
+    document.querySelectorAll('.asset-card').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.asset-card').forEach(item => item.classList.remove('active')); card.classList.add('active'); document.getElementById('asset-tip').innerHTML = '<strong>Integration tip:</strong> ' + card.dataset.tip; }); });
+    document.querySelectorAll('[data-mode]').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('[data-mode]').forEach(item => { const selected = item === tab; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected)); }); document.querySelectorAll('.kpi-card').forEach(card => { const visible = tab.dataset.mode === 'overview' || card.dataset.category === tab.dataset.mode; card.style.opacity = visible ? '1' : '0.32'; }); }); });
+</script>
+</body>
+</html>
